@@ -11,7 +11,7 @@ let lightbox = new SimpleLightbox('.gallery a', {
 });
 
 let currentPage = 1;
-let currentHits = 0;
+let currentHits = 40;
 let searchQuery = '';
 
 refs.searchForm.addEventListener('submit', onSearchFormSubmit);
@@ -29,7 +29,6 @@ async function onSearchFormSubmit(e) {
     });
     return;
   }
-  console.log(await fetchGallery(searchQuery, currentPage));
 
   const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
   currentHits = hits.length;
@@ -75,21 +74,26 @@ async function onSearchFormSubmit(e) {
 }
 
 async function onLoadMoreClick() {
-  const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
-  currentPage += 1;
-  currentHits += hits.length;
-  if (currentHits === totalHits) {
-    Notify.warning(
-      "We're sorry, but you've reached the end of search results.",
-      {
-        timeout: 6000,
-      }
-    );
-    refs.loadMoreBtn.classList.add('is-hidden');
-  }
   try {
+    const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
+    currentPage += 1;
+    currentHits += hits.length;
+    console.log(hits.length);
+    console.log(currentHits);
+    console.log(await fetchGallery(searchQuery, currentPage));
+
     appendGalleryMarkup(hits);
     lightbox.refresh();
+
+    if (currentHits >= totalHits) {
+      Notify.warning(
+        "We're sorry, but you've reached the end of search results.",
+        {
+          timeout: 6000,
+        }
+      );
+      refs.loadMoreBtn.classList.add('is-hidden');
+    }
   } catch (error) {
     Notify.failure(error.message, 'Something went wrong!');
     clearGalleryMarkup();
