@@ -11,7 +11,7 @@ let lightbox = new SimpleLightbox('.gallery a', {
 });
 
 let currentPage = 1;
-let currentHits = 40;
+let currentHits = 0;
 let searchQuery = '';
 
 refs.searchForm.addEventListener('submit', onSearchFormSubmit);
@@ -22,6 +22,7 @@ async function onSearchFormSubmit(e) {
 
   searchQuery = e.currentTarget.searchQuery.value;
   currentPage = 1;
+  currentHits = 0;
 
   if (searchQuery.trim() === '') {
     Notify.warning(' Please try again.', {
@@ -31,7 +32,7 @@ async function onSearchFormSubmit(e) {
   }
 
   const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
-  currentHits = hits.length;
+  // currentHits = hits.length;
 
   if (totalHits > 40) {
     refs.loadMoreBtn.classList.remove('is-hidden');
@@ -64,7 +65,7 @@ async function onSearchFormSubmit(e) {
       Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.',
         {
-          timeout: 6000,
+          timeout: 5000,
         }
       );
     }
@@ -85,7 +86,7 @@ async function onLoadMoreClick() {
     appendGalleryMarkup(hits);
     lightbox.refresh();
 
-    if (currentHits >= totalHits) {
+    if (currentHits === totalHits) {
       Notify.warning(
         "We're sorry, but you've reached the end of search results.",
         {
