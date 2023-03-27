@@ -79,10 +79,6 @@ async function onLoadMoreClick() {
     const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
     currentPage += 1;
     currentHits += hits.length;
-    console.log(hits.length);
-    console.log(currentHits);
-    console.log(await fetchGallery(searchQuery, currentPage));
-
     appendGalleryMarkup(hits);
     lightbox.refresh();
 
