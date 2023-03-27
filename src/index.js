@@ -3,12 +3,8 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { fetchGallery } from './js/api-service';
 import { galleryMarkup } from './js/markup-template';
-
-const refs = {
-  searchForm: document.querySelector('#search-form'),
-  galleryBox: document.querySelector('.gallery'),
-  loadMoreBtn: document.querySelector('.load-more'),
-};
+import { refs } from './js/refs';
+import { onLoadMoreClick } from './js/load-more';
 
 let lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
@@ -78,24 +74,29 @@ async function onSearchFormSubmit(e) {
     console.log(error);
   }
 }
-async function onLoadMoreClick() {
-  currentPage += 1;
 
-  const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
-  appendGalleryMarkup(hits);
-  lightbox.refresh();
-  currentHits += hits.length;
+// async function onLoadMoreClick() {
+//   currentPage += 1;
+//   currentHits += hits.length;
 
-  if (currentHits === totalHits) {
-    Notify.warning(
-      "We're sorry, but you've reached the end of search results.",
-      {
-        timeout: 6000,
-      }
-    );
-    refs.loadMoreBtn.classList.add('is-hidden');
-  }
-}
+//   if (currentHits === totalHits) {
+//     Notify.warning(
+//       "We're sorry, but you've reached the end of search results.",
+//       {
+//         timeout: 6000,
+//       }
+//     );
+//     refs.loadMoreBtn.classList.add('is-hidden');
+//   }
+//   try {
+//     const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
+//     appendGalleryMarkup(hits);
+//     lightbox.refresh();
+//   } catch (error) {
+//     Notify.failure(error.message, 'Something went wrong!');
+//     clearGalleryMarkup();
+//   }
+// }
 
 function appendGalleryMarkup(hits) {
   refs.galleryBox.insertAdjacentHTML('beforeend', galleryMarkup(hits));
