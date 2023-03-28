@@ -24,15 +24,14 @@ async function onSearchFormSubmit(e) {
   currentPage = 1;
   currentHits = 0;
 
+  const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
+
   if (searchQuery.trim() === '') {
     Notify.warning(' Please try again.', {
       timeout: 6000,
     });
     return;
   }
-
-  const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
-  // currentHits = hits.length;
 
   if (totalHits > 40) {
     refs.loadMoreBtn.classList.remove('is-hidden');
@@ -43,7 +42,7 @@ async function onSearchFormSubmit(e) {
   try {
     if (totalHits > 0) {
       Notify.success(`Hooray! We found ${totalHits} images.`, {
-        timeout: 6000,
+        timeout: 5000,
       });
       clearGalleryMarkup();
       appendGalleryMarkup(hits);
@@ -57,6 +56,15 @@ async function onSearchFormSubmit(e) {
         top: cardHeight * -100,
         behavior: 'smooth',
       });
+    }
+
+    if (totalHits === hits.length) {
+      Notify.warning(
+        "We're sorry, but you've reached the end of search results.",
+        {
+          timeout: 6000,
+        }
+      );
     }
 
     if (totalHits === 0) {
