@@ -57,8 +57,8 @@ async function onSearchFormSubmit(e) {
         behavior: 'smooth',
       });
     }
-
-    if (totalHits === hits.length) {
+    currentHits += hits.length;
+    if (currentHits === totalHits) {
       Notify.warning(
         "We're sorry, but you've reached the end of search results.",
         {
@@ -78,7 +78,8 @@ async function onSearchFormSubmit(e) {
       );
     }
   } catch (error) {
-    console.log(error);
+    Notify.failure(error.message, 'Something went wrong!');
+    clearGalleryMarkup();
   }
 }
 
