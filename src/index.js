@@ -83,9 +83,9 @@ async function onSearchFormSubmit(e) {
 }
 
 async function onLoadMoreClick() {
+    currentPage += 1;
   try {
     const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
-    currentPage += 1;
     currentHits += hits.length;
     appendGalleryMarkup(hits);
     lightbox.refresh();
