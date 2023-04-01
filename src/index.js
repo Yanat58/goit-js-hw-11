@@ -24,14 +24,15 @@ async function onSearchFormSubmit(e) {
   currentPage = 1;
   currentHits = 0;
 
-  const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
-
-  if (searchQuery.trim() === '') {
+  if (!searchQuery.trim()) {
     Notify.warning(' Please try again.', {
       timeout: 6000,
     });
+    clearGalleryMarkup();
     return;
   }
+
+  const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
 
   if (totalHits > 40) {
     refs.loadMoreBtn.classList.remove('is-hidden');
@@ -84,7 +85,7 @@ async function onSearchFormSubmit(e) {
 }
 
 async function onLoadMoreClick() {
-    currentPage += 1;
+  currentPage += 1;
   try {
     const { hits, totalHits } = await fetchGallery(searchQuery, currentPage);
     currentHits += hits.length;
